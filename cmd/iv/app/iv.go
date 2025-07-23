@@ -2,9 +2,8 @@ package app
 
 import (
 	"iv/cmd/login"
-	"os"
+	"iv/pkg/logging"
 
-	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
 )
 
@@ -31,18 +30,7 @@ func NewIVCommand(args []string) *cobra.Command {
 }
 
 func Run(args []string) error {
-	lgr := initLogger()
+	lgr := logging.InitLogger()
 	lgr.Info().Msgf("Logging Initialized")
 	return nil
-}
-
-func initLogger() zerolog.Logger {
-	lvl, err := zerolog.ParseLevel("Debug")
-	if err != nil {
-		panic("Error Initializing Logger")
-	}
-	lgr := zerolog.New(os.Stdout).Level(lvl)
-	lgr = lgr.With().Timestamp().Logger()
-	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
-	return lgr
 }
