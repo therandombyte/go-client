@@ -1,29 +1,27 @@
 package app
 
 import (
-	"fmt"
 	"iv/cmd/login"
+	"os"
 
+	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
 )
 
 func init() {
-	
+
 }
 
-func NewIVCommand() *cobra.Command {
+func NewIVCommand(args []string) *cobra.Command {
 	// fmt.Println("Init here")
 
-	cmd := &cobra.Command {
-		Use: "iv",
+	cmd := &cobra.Command{
+		Use:   "iv",
 		Short: "iv is a go client to make REST api calls to server",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Root iv command called")
+
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return Run(args)
 		},
-		// RunE: func(cmd *cobra.Command, args []string) error {
-		// 	fmt.Println("RunE block")
-		// 	return Run()
-		// },
 	}
 
 	login := login.NewLoginCommand()
@@ -32,9 +30,19 @@ func NewIVCommand() *cobra.Command {
 	return cmd
 }
 
-func Run() error{
-	fmt.Println("In Run Block")
+func Run(args []string) error {
+	lgr := initLogger()
+	lgr.Info().Msgf("Logging Initialized")
 	return nil
 }
 
-
+func initLogger() zerolog.Logger {
+	lvl, err := zerolog.ParseLevel("Debug")
+	if err != nil {
+		panic("Error Initializing Logger")
+	}
+	lgr := zerolog.New(os.Stdout).Level(lvl)
+	lgr = lgr.With().Timestamp().Logger()
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+	return lgr
+}
