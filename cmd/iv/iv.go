@@ -8,5 +8,5 @@ import (
 func main() {
 	command := app.NewIVCommand(os.Args)
 	command.Execute()
-	os.Exit(1)
+	// os.Exit(1)
 }
