@@ -17,6 +17,22 @@ type Server struct {
 	// Services
 }
 
+func New(sm *http.ServeMux, ds driver.Server, lgr zerolog.Logger) *Server {
+	return &Server{
+		mux:    sm,
+		Driver: ds,
+		Logger: lgr,
+	}
+}
+
+func (s *Server) ListenAndServe() error {
+	return nil
+}
+
+func (s *Server) Shutdown() error {
+	return nil
+}
+
 // Driver implements the driver.Server Interface
 type Driver struct {
 	Server http.Server
