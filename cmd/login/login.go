@@ -13,6 +13,9 @@ func NewLoginCommand() *cobra.Command {
 	cmd := &cobra.Command {
 		Use: "iv login",
 		Short: "iv login will log into the REST server",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Login subcommand called")
+		},
 	}
 	
 	return cmd
