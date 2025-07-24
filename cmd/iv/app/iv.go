@@ -2,9 +2,7 @@ package app
 
 import (
 	"iv/cmd/login"
-	"iv/pkg/logging"
 	"iv/pkg/server"
-	"net/http"
 
 	"github.com/spf13/cobra"
 )
@@ -29,13 +27,26 @@ func NewIVCommand(args []string) *cobra.Command {
 }
 
 func Run(args []string) error {
-	lgr := logging.InitLogger()
-	lgr.Info().Msgf("Logging Initialized")
 
-	// server multiplexer is often called router that routes incoming 
-	// requests to its handler
-	s := server.New(http.NewServeMux(), server.NewDriver(), lgr)
-	s.Addr = ":8081"
+	return server.RunServer() 
+	// lgr := logging.InitLogger()
+	// lgr.Info().Msgf("Logging Initialized")
 
-	return s.ListenAndServe()
+	// // server multiplexer is often called router that routes incoming
+	// // requests to its handler
+	// s := server.New(http.NewServeMux(), server.NewDriver(), lgr)
+	// s.Addr = ":8081"
+	// errCh := make(chan error, 1)
+	// fmt.Println("Starting to serve... ")
+	// go func() {
+	// 	errCh <- s.ListenAndServe()
+	// }()
+
+	// // channel to listen for interrupt signal
+	// sigInt := make(chan os.Signal, 1)
+	// signal.Notify(sigInt, os.Interrupt, syscall.SIGTERM)
+
+
+
+	// return s.ListenAndServe()
 }
