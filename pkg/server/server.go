@@ -24,15 +24,17 @@ type Server struct {
 }
 
 type Services struct {
-	
+	name string
 }
 
 func New(sm *http.ServeMux, ds driver.Server, lgr zerolog.Logger) *Server {
-	return &Server{
+	s := &Server{
 		mux:    sm,
 		Driver: ds,
 		Logger: lgr,
 	}
+	s.registerRoutes()
+	return s
 }
 
 func (s *Server) ListenAndServe() error {
@@ -89,9 +91,9 @@ func RunServer() error {
 	select {
 	case err := <-errCh:
 		lgr.Info().Msgf("server start error: %v", err)
-	case <- sigInt:
+	case <-sigInt:
 		lgr.Info().Msgf("shutdown signal received")
-		ctx, cancel := context.WithTimeout(context.Background(), 5 * time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
 		if err := s.Shutdown(ctx); err != nil {
 			lgr.Info().Msgf("graceful shutdown error: %v", err)
