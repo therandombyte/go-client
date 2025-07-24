@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"iv/pkg/server/driver"
 	"net/http"
 	"time"
@@ -14,7 +15,11 @@ type Server struct {
 	Driver driver.Server
 	Logger zerolog.Logger // to be passed as generics?
 	Addr   string
-	// Services
+	Services
+}
+
+type Services struct {
+
 }
 
 func New(sm *http.ServeMux, ds driver.Server, lgr zerolog.Logger) *Server {
@@ -26,7 +31,7 @@ func New(sm *http.ServeMux, ds driver.Server, lgr zerolog.Logger) *Server {
 }
 
 func (s *Server) ListenAndServe() error {
-	return nil
+	return s.Driver.ListenAndServe(s.Addr, s.mux)
 }
 
 func (s *Server) Shutdown() error {
@@ -49,9 +54,11 @@ func NewDriver() *Driver {
 }
 
 func (d *Driver) ListenAndServe(addr string, h http.Handler) error {
-	return nil
+	d.Server.Addr = addr
+	d.Server.Handler = h
+	return d.Server.ListenAndServe()
 }
 
-func (d *Driver) Shutdown() error {
+func (d *Driver) Shutdown(ctx context.Context) error {
 	return nil
 }
